@@ -58,10 +58,56 @@ class LinkedList {
     cout << endl;
   }
 
-  // Time: O(?)
-  // Space: O(?)
-  void kthLast(int k) {
-    
+  // Time: O(N)
+  // Space: O(1)
+  // Trivial: Two pass approach
+  int kthLast(int k) {
+    Node *ptr = this->head;
+    int size = 0;
+    while(ptr != NULL) {
+      size++;
+      ptr = ptr->next;
+    }
+    int target = size - k + 1; // target position w.r.t. head
+    ptr = this->head;
+    int current = 0;
+    while(ptr != NULL) {
+      if(++current == target) return ptr->data;
+      ptr = ptr->next;
+    }
+    return -1;
+  }
+
+  // Time: O(N)
+  // Space: O(N)
+  // Recursive Approach
+  int kthLast(Node *curr, int k) {
+    if(curr == NULL) return 0;
+    int currIndex = kthLast(curr->next, k) + 1;
+    if(currIndex == k) {
+      cout << k << "-th last: " << curr->data << endl;
+    }
+    return currIndex;
+  }
+
+  // Time: O(N)
+  // Space: O(1)
+  // Two pointer approach : Almost single pass approach... (k + N)
+  void kthLast_Itr(int k) {
+    Node *first = this->head;
+    Node *second = this->head;
+    int count = 0;
+    while(count != k) {
+      second = second->next;
+      count++;
+    } // now first and second are 'k' apart
+
+    while(second != NULL) {
+      second = second->next;
+      first = first->next;
+    } // second has hit NULL, so first is 'kth' last
+
+    cout << k << "-th pos: " << first->data << endl;
   }
 };
 
@@ -73,6 +119,9 @@ int main() {
   mylist.append(4);
   mylist.append(5);
   mylist.append(6);
-  mylist.append(7);
   mylist.print();
+  int k = 1;
+  // cout << k << "-th pos: " << mylist.kthLast(k) << endl;
+  // mylist.kthLast(mylist.head, k);
+  mylist.kthLast_Itr(k);
 }
