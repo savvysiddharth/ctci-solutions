@@ -61,6 +61,9 @@ class LinkedList {
     cout << endl;
   }
 
+  // Time: O(N)
+  // Space: O(1)
+  // Floyd Loop Detection Algorithm
   Node* detectLoop() {
     Node *turtoise = this->head, *hare = this->head;
     while(hare != NULL) {
@@ -83,16 +86,6 @@ class LinkedList {
     } else return NULL;
   }
 };
-
-// Time: O(N)
-// Space: O(1)
-// Go to end of both list to find if intersection exists
-// if exists, find difference of length and act accordingly to find the intersecting node
-Node* isIntersection(Node *list) {
-  Node *ptr = list;
-
-  return NULL;
-}
 
 int main() {
   LinkedList l1;
