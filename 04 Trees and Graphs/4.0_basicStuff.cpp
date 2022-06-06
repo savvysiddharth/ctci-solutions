@@ -580,32 +580,32 @@ int main() {
 
   cout << "\n--------------BINARY TREE------------\n\n";
 
-  // BinaryTree bt;
+  BinaryTree bt;
   
-  // for(int i=1; i<=15; i++) bt.addNode(i);
+  for(int i=1; i<=15; i++) bt.addNode(i);
 
-  // cout << "Level Order Traversal: " << endl;
-  // bt.printBFS();
-  // cout << "-----------------\n";
+  cout << "Level Order Traversal: " << endl;
+  bt.printBFS();
+  cout << "-----------------\n";
   
-  // cout << "postorder: "; bt.my_postorder_iterative();
-  // cout << "inorder: "; bt.my_inorder_iterative();
-  // cout << "preorder: "; bt.my_preorder_iterative();
+  cout << "postorder: "; bt.my_postorder_iterative();
+  cout << "inorder: "; bt.my_inorder_iterative();
+  cout << "preorder: "; bt.my_preorder_iterative();
 
   cout << "\n--------------HEAP------------\n\n";
 
-  // MinHeap myheap;
+  MinHeap myheap;
 
-  // for(int i=15; i>=1; i--) myheap.add(i);
+  for(int i=15; i>=1; i--) myheap.add(i);
 
-  // myheap.print();
-  // cout << "--" << endl;
+  myheap.print();
+  cout << "--" << endl;
 
-  // for(int i=0; i<3; i++) {
-  //   myheap.extractMin();
-  //   myheap.print();
-  //   cout << "--" << endl;
-  // }
+  for(int i=0; i<3; i++) {
+    myheap.extractMin();
+    myheap.print();
+    cout << "--" << endl;
+  }
 
   cout << "\n--------------GRAPH------------\n\n";
 
@@ -624,6 +624,6 @@ int main() {
 
   graph.print();
   cout << "---------------\n";
-  graph.printBFS();
-  graph.printDFS();
+  cout << "bfs: "; graph.printBFS();
+  cout << "dfs: "; graph.printDFS();
 }
