@@ -5,7 +5,7 @@
 #include <cmath>
 using namespace std;
 
-#define N 10
+#define N 10 // N-ary tree
 
 class TreeNode {
   public:
@@ -54,6 +54,34 @@ class BinaryTree {
 
   BinaryTree() {
     root = NULL;
+  }
+
+  // adds to first place possible
+  void addNode(int data) {
+    Node *newnode = new Node(data);
+    if(root == NULL) {
+      root = newnode;
+      return;
+    } else {
+      queue<Node*> q;
+      q.push(root);
+      while(!q.empty()) {
+        Node *curr = q.front();
+        q.pop();
+        if(curr->left == NULL) {
+          newnode->parent = curr;
+          curr->left = newnode;
+          return;
+        } else if(curr->right == NULL) {
+          newnode->parent = curr;
+          curr->right = newnode;
+          return;
+        } else {
+          q.push(curr->left);
+          q.push(curr->right);
+        }
+      }
+    }
   }
 
   void addNode(int data, Node *parent) {
@@ -318,7 +346,7 @@ class Heap_Lite {
     }
   }
 
-  void printBFS() {
+  void print() {
     heap.printBFS();
   }
 
@@ -378,6 +406,13 @@ class MinHeap {
     heapifyUp(size-1);
   }
 
+  // Time: O(1)
+  int getMin() {
+    if(size == 0) return -1;
+    return heap[0];
+  }
+
+  // Time: O(logN)
   int extractMin() {
     if(size == 0) return -1;
     int MIN = heap[0];
@@ -388,7 +423,7 @@ class MinHeap {
   }
 
   // Prints heap array in Level order form
-  void printBFS() {
+  void print() {
     int count = 1;
     int currentCount = 0;
     for(int i=0; i<size; i++) {
@@ -426,6 +461,7 @@ class MinHeap {
     } else return;
   }
 
+  // Time: O(logN)
   void heapifyDown(int i) {
     if(i >= size) return;
     if(left(i) >= size && right(i) >= size) return;
@@ -448,14 +484,77 @@ class MinHeap {
   }
 };
 
-class Graph {
+void printVector(vector<int> arr) {
+  cout << "Data: [ ";
+  for(int item : arr) {
+    cout << item << " ";
+  }
+  cout << " ]" << endl;
+}
 
+class Graph {
+  public:
+  vector<vector<int>> adjList;
+
+  void addNode() {
+    adjList.push_back(vector<int>{});
+  }
+
+  void addEdge(int i, int j) {
+    adjList[i].push_back(j);
+    adjList[j].push_back(i);
+  }
+
+  void print() {
+    for(int i=0; i<adjList.size(); i++) {
+      cout << "node " << i << ": ";
+      for(int j=0; j<adjList[i].size(); j++) {
+        cout << adjList[i][j] << " ";
+      }
+      cout << endl;
+    }
+  }
+
+  void printBFS() {
+    vector<int> visited (adjList.size(), 0);
+    queue<int> q;
+    q.push(0); // starting with node 0
+    visited[0] = 1;
+    while(!q.empty()) {
+      int curr = q.front();
+      q.pop();
+      cout << curr << " ";
+      for(int child : adjList[curr]) {
+        if(visited[child] == 0) {
+          q.push(child);
+          visited[child] = 1;
+        }
+      }
+    }
+    cout << endl;
+  }
+
+  void printDFS() {
+    vector<int> visited (adjList.size(), 0);
+    stack<int> stack;
+    stack.push(0);
+    visited[0] = 1;
+    while(!stack.empty()) {
+      int curr = stack.top();
+      stack.pop();
+      cout << curr << " ";
+      for(int child : adjList[curr]) {
+        if(visited[child] == 0) {
+          stack.push(child);
+          visited[child] = 1;
+        }
+      }
+    }
+    cout << endl;
+  }
 };
 
-int main() {
-  BinaryTree bt;
-  
-  // Building a tree
+void buildExampleTree(BinaryTree bt) {
   bt.addNode(1, NULL);
   
   bt.addNode(2, bt.root);
@@ -466,61 +565,65 @@ int main() {
   bt.addNode(6, bt.root->right);
   bt.addNode(7, bt.root->right);
   
-  // bt.addNode(8, bt.root->left->left);
-  // bt.addNode(9, bt.root->left->left);
-  // bt.addNode(10, bt.root->left->right);
-  // bt.addNode(11, bt.root->left->right);
+  bt.addNode(8, bt.root->left->left);
+  bt.addNode(9, bt.root->left->left);
+  bt.addNode(10, bt.root->left->right);
+  bt.addNode(11, bt.root->left->right);
 
-  // bt.addNode(12, bt.root->right->left);
-  // bt.addNode(13, bt.root->right->left);
-  // bt.addNode(14, bt.root->right->right);
-  // bt.addNode(15, bt.root->right->right);
+  bt.addNode(12, bt.root->right->left);
+  bt.addNode(13, bt.root->right->left);
+  bt.addNode(14, bt.root->right->right);
+  bt.addNode(15, bt.root->right->right);
+}
 
-  cout << "Level Order Traversal: " << endl;
-  bt.printBFS();
-  cout << "-----------------\n";
+int main() {
 
-  // bt.preorder_iterative();
-  // bt.inorder_iterative();
+  cout << "\n--------------BINARY TREE------------\n\n";
+
+  // BinaryTree bt;
   
-  cout << "postorder: "; bt.my_postorder_iterative();
-  cout << "inorder: "; bt.my_inorder_iterative();
-  cout << "preorder: "; bt.my_preorder_iterative();
+  // for(int i=1; i<=15; i++) bt.addNode(i);
+
+  // cout << "Level Order Traversal: " << endl;
+  // bt.printBFS();
+  // cout << "-----------------\n";
+  
+  // cout << "postorder: "; bt.my_postorder_iterative();
+  // cout << "inorder: "; bt.my_inorder_iterative();
+  // cout << "preorder: "; bt.my_preorder_iterative();
 
   cout << "\n--------------HEAP------------\n\n";
 
-  MinHeap myheap;
-  myheap.add(15);
-  myheap.add(14);
-  myheap.add(13);
-  myheap.add(12);
-  myheap.add(11);
-  myheap.add(10);
-  myheap.add(9);
-  myheap.add(8);
-  myheap.add(7);
-  myheap.add(6);
-  myheap.add(5);
-  myheap.add(4);
-  myheap.add(3);
-  myheap.add(2);
-  myheap.add(1);
-  
-  myheap.printBFS();
-  cout << "--" << endl;
-  
-  myheap.extractMin();
-  
-  myheap.printBFS();
-  cout << "--" << endl;
+  // MinHeap myheap;
 
-  myheap.extractMin();
-  
-  myheap.printBFS();
-  cout << "--" << endl;
+  // for(int i=15; i>=1; i--) myheap.add(i);
 
-  myheap.extractMin();
+  // myheap.print();
+  // cout << "--" << endl;
+
+  // for(int i=0; i<3; i++) {
+  //   myheap.extractMin();
+  //   myheap.print();
+  //   cout << "--" << endl;
+  // }
+
+  cout << "\n--------------GRAPH------------\n\n";
+
+  Graph graph;
   
-  myheap.printBFS();
-  cout << "--" << endl;
+  for(int i=0; i<6; i++) graph.addNode();
+  
+  graph.addEdge(0,1);
+  graph.addEdge(0,2);
+  graph.addEdge(1,3);
+  graph.addEdge(1,4);
+  graph.addEdge(2,4);
+  graph.addEdge(3,4);
+  graph.addEdge(3,5);
+  graph.addEdge(4,5);
+
+  graph.print();
+  cout << "---------------\n";
+  graph.printBFS();
+  graph.printDFS();
 }
