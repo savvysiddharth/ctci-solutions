@@ -9,6 +9,7 @@ using namespace std;
 class Node {
   public:
   int data;
+  int subtreeHeight;
   Node *left;
   Node *right;
   Node *parent;
@@ -18,6 +19,7 @@ class Node {
     left = NULL;
     right = NULL;
     parent = NULL;
+    subtreeHeight = 1;
   }
 };
 
@@ -25,6 +27,7 @@ class Node {
 class BinaryTree {
   public:
   Node *root;
+  int deepestLevel = 0;
 
   BinaryTree() {
     root = NULL;
@@ -56,12 +59,29 @@ class BinaryTree {
         }
       }
     }
+    Node *curr = newnode->parent;
+    int prevHeight = 1;
+    while(curr != root && curr != NULL) {
+      curr->subtreeHeight = ++prevHeight;
+      curr = curr->parent;
+    }
+    if(curr != NULL) curr->subtreeHeight++;
   }
 
   void addNode(int data, Node *parent) {
-    if(parent == NULL) root = new Node(data);
-    else if(parent->left == NULL) parent->left = new Node(data);
-    else if(parent->right == NULL) parent->right = new Node(data);
+    Node *newnode = new Node(data);
+    if(parent == NULL) root = newnode;
+    else if(parent->left == NULL) parent->left = newnode;
+    else if(parent->right == NULL) parent->right = newnode;
+    newnode->parent = parent;
+
+    Node *curr = newnode->parent;
+    int prevHeight = 1;
+    while(curr != root && curr != NULL) {
+      curr->subtreeHeight =  ++prevHeight;
+      curr = curr->parent;
+    }
+    if(curr != NULL) curr->subtreeHeight++;
   }
 
   // Level order traversal - BFS
@@ -101,17 +121,49 @@ class BinaryTree {
     return getHeight(root);
   }
 
+  // Time : O(N)
   int getHeight(Node *curr) {
     if(curr == NULL) return 0;
     return 1 + max(getHeight(curr->left), getHeight(curr->right));
   }
 
-  bool checkBalanced() {
-    if(root == NULL) return true;
-    int leftHeight = getHeight(root->left);
-    int rightHeight = getHeight(root->right);
-    if(abs(leftHeight - rightHeight) <= 1) return true;
-    else return false;
+  // Time: O(NlogN) (Checks height of each subtree for each node)
+  bool checkBalanced(Node *curr) {
+    if(curr == NULL) return true;
+    int leftHeight = getHeight(curr->left);
+    int rightHeight = getHeight(curr->right);
+    if(abs(leftHeight - rightHeight) > 1) return false;
+    else return checkBalanced(curr->left) && checkBalanced(curr->right);
+  }
+
+
+  // Time: O(N)
+  // Actual implementation is in addNode() function
+  // Height of subtree is updated during insertion
+  // This adds extra overhead of O(logN) in insertion
+  bool checkBalancedFaster(Node *curr) {
+    if(curr == NULL) return true;
+    int leftTreeHeight = curr->left == NULL ? 0 : curr->left->subtreeHeight;
+    int rightTreeHeight = curr->right == NULL ? 0 : curr->right->subtreeHeight;
+    if(abs(leftTreeHeight - rightTreeHeight) > 1) return false;
+    else return checkBalancedFaster(curr->left) && checkBalancedFaster(curr->right);
+  }
+
+  int checkHeight(Node *curr) {
+    if(curr == NULL) return 0;
+    int leftHeight = checkHeight(curr->left);
+    int rightHeight = checkHeight(curr->right);
+    if(leftHeight == -1 || rightHeight == -1) return -1;
+    if(abs(leftHeight - rightHeight) > 1) return -1;
+    else return 1 + max(leftHeight, rightHeight);
+  }
+
+  // Time: O(N)
+  // No need for any overhead on insertion
+  // checkHeight() function checks for subtree height difference while calculating height
+  bool checkBalancedBetter() {
+    if(checkHeight(root) == -1) return false;
+    else return true;
   }
 };
 
@@ -143,7 +195,20 @@ int main() {
   buildExampleTree(bt);
 
   bt.printBFS();
+
+  cout << "------------------------" << endl;
   
-  if(bt.checkBalanced()) cout << "BALANCED :)" << endl;
-  else cout << "NOT BALANCED :(" << endl;
+  if(bt.checkBalanced(bt.root)) cout << "BALANCED :) (took O(NlogN) time)" << endl;
+  else cout << "NOT BALANCED :( (took O(NlogN) time)" << endl;
+  
+  cout << "------------------------" << endl;
+
+  if(bt.checkBalancedFaster(bt.root)) cout << "BALANCED :) (said it faster than above subroutine)" << endl;
+  else cout << "NOT BALANCED :( (said it faster than above subroutine)" << endl;
+
+  cout << "------------------------" << endl;
+
+  if(bt.checkBalancedBetter()) cout << "BALANCED :) (said it without being burden on anyone else)" << endl;
+  else cout << "NOT BALANCED :( (said it without being burden on anyone else)" << endl;
+
 }
