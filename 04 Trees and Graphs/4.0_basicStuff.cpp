@@ -554,7 +554,7 @@ class Graph {
   }
 };
 
-void buildExampleTree(BinaryTree bt) {
+void buildExampleTree(BinaryTree &bt) {
   bt.addNode(1, NULL);
   
   bt.addNode(2, bt.root);
