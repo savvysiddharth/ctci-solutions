@@ -2,5 +2,8 @@
   "files.associations": {
     "stack": "cpp",
     "iostream": "cpp"
+  },
+  "files.exclude": {
+    "**/.vscode": true
   }
 }
