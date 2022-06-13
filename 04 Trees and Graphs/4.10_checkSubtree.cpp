@@ -126,6 +126,7 @@ class BinaryTree {
   void printBFS() {
     if(root == NULL) return;
     queue<Node*> myqueue;
+    myqueue = {};
     myqueue.push(root);
     myqueue.push(NULL); // to add newline after second level
     while(!myqueue.empty()) {
@@ -140,6 +141,7 @@ class BinaryTree {
       if(curr->left != NULL) myqueue.push(curr->left);
       if(curr->right != NULL) myqueue.push(curr->right);
     }
+    // myqueue = {};
   }
 
   void printInorder() {
@@ -165,47 +167,63 @@ class BinaryTree {
     return 1 + max(getHeight(curr->left), getHeight(curr->right));
   }
 
-  void bstSeq() {
-    list<Node*> startingList, emptyList;
-    startingList.push_back(root);
-    bstSeq(startingList, emptyList);
-  }
-  
-  // Reference: https://gist.github.com/kean/40a1e592a608154b117a0dac48baf25f#file-ctci-6h-problem-4-9-markdown
-  // Time: O(N) 
-  // Space: O(NLogN)
-  void bstSeq(list<Node *> currChoices, list<Node *> output) {
-    if(currChoices.size() == 0) {
-      for(auto node : output) cout << node->data << " ";
-      cout << endl;
-    } else {
-      for(auto node : currChoices) {
-        list<Node*> temp1 = currChoices;
-        list<Node*> temp2 = output;
-        temp1.remove(node);
-        if(node->left != NULL) temp1.push_back(node->left);
-        if(node->right != NULL) temp1.push_back(node->right);
-        temp2.push_back(node);
-        bstSeq(temp1, temp2);
-      }
+  // Time: O(N^2)
+  bool checkIfSubtree(Node *tree2) {
+    int tree2top = tree2->data;
+    queue<Node*> q;
+    q = {};
+    q.push(root);
+    while(!q.empty()) {
+      Node *curr = q.front();
+      q.pop();
+      if(curr->data == tree2top)
+        if(compareTrees(curr, tree2)) return true;
+      if(curr->left != NULL) q.push(curr->left);
+      if(curr->right != NULL) q.push(curr->right);
     }
+    return false;
+  }
+
+  // Time: O(NM)
+  // N : Size of big tree
+  // M : Size of small tree
+  // Tighter Time: O(N + KM)
+  // K : Occurrence of root of small tree in big tree
+  // recursively traverse both trees in same way..
+  // ..and return true if all nodes are exactly same
+  // else false
+  bool compareTrees(Node *tree1, Node *tree2) {
+    if(tree1 == NULL || tree2 == NULL)
+      if(tree1 == NULL && tree2 == NULL) return true;
+      else return false;
+    return tree1->data == tree2->data && compareTrees(tree1->left, tree2->left) && compareTrees(tree1->right, tree2->right);
   }
 
 };
 
 int main() {
-  BinaryTree bt;
+  BinaryTree bt1;
   
-  bt.addBSTNode(4);
-  bt.addBSTNode(2);
-  bt.addBSTNode(6);
-  bt.addBSTNode(1);
-  bt.addBSTNode(3);
-  bt.addBSTNode(5);
-  bt.addBSTNode(7);
+  bt1.addNode(4);
+  bt1.addNode(2);
+  bt1.addNode(6);
+  bt1.addNode(1);
+  bt1.addNode(3);
+  bt1.addNode(5);
+  bt1.addNode(7);
 
-  bt.printBFS();
+  BinaryTree bt2;
+
+  bt2.addNode(6);
+  bt2.addNode(5);
+  bt2.addNode(7);
+
+  bt1.printBFS();
   cout << "-----------" << endl;
 
-  bt.bstSeq();
+  bt2.printBFS();
+  cout << "-----------" << endl;
+
+  if(bt1.checkIfSubtree(bt2.root)) cout << "Yea, tree-2 is subtree of tree-1.." << endl; 
+  else cout << "Nope, it ain't it..." << endl;
 }
