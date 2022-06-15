@@ -9,8 +9,6 @@ int maxFlipSeq(int num) {
   while(num != 0) {
     int bit = num%2;
     num /= 2;
-    cout << bit;
-
     if(bit  == 1) currCount++;
     else if(bit == 0) {
       if(lastZeroSeenAt == -1) {
@@ -22,17 +20,11 @@ int maxFlipSeq(int num) {
         lastZeroSeenAt = i;
       }
     }
-
     i++;
   } if(currCount > max) max = currCount;
-
-  cout << endl;
-
-  cout << "max: " << max << endl;
-
   return max;
 }
 
 int main() {
-  maxFlipSeq(3487);
+  cout << maxFlipSeq(1775) << endl;
 }
