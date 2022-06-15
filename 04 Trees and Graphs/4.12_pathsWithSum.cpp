@@ -193,6 +193,7 @@ class BinaryTree {
   }
 
   // Time: O(N)
+  // Actual recursive that checks all path from a given node
   void pathsWithSum(Node *curr, int currSum, int &target, int &count) {
     if(curr == NULL) return;
     currSum += curr->data;
@@ -210,20 +211,20 @@ class BinaryTree {
   int pathsWithSum_Fast(int target) {
     int count = 0;
     unordered_map<int,int> map;
-    do_with_inorder(root, target, count, 0, map);
+    do_with_dfs(root, target, count, 0, map);
     cout << "count: " << count << endl;
     return count;
   }
 
-  void do_with_inorder(Node *curr, int &target, int &count, int currSum, unordered_map<int,int> &map) {
+  void do_with_dfs(Node *curr, int &target, int &count, int currSum, unordered_map<int,int> &map) {
     if(curr == NULL) return;
     currSum += curr->data;
     if(currSum == target) count++;
     if(map.find(currSum-target) != map.end()) count+= map[currSum-target];
     if(map.find(currSum) == map.end()) map.insert({currSum,1});
     else map[currSum]++;
-    do_with_inorder(curr->left, target, count, currSum, map);
-    do_with_inorder(curr->right, target, count, currSum, map);
+    do_with_dfs(curr->left, target, count, currSum, map);
+    do_with_dfs(curr->right, target, count, currSum, map);
     map.erase(currSum);
   }
 
