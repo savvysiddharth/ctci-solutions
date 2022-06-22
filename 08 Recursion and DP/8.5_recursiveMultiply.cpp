@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+// Time: O(log(b))
 int rmult(int a, int b, int shift, int psum) {
   if(b >> shift == 0) return psum;
   int bit = (b >> shift) & 1;
@@ -15,7 +16,6 @@ int mult(int a, int b) {
 
 int main() {
   int a = 13;
-  int b = 13;
-
+  int b = 12;
   cout << mult(a,b) << endl;
 }
