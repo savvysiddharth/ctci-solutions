@@ -1,9 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// hash function for pair
+// (STL doesn't have hash function of pair by default)
+struct hash_pair {
+  template <class T1, class T2>
+  size_t operator()(const pair<T1, T2> &p) const {
+    auto hash1 = hash<T1>{}(p.first);
+    auto hash2 = hash<T2>{}(p.second);
+    if (hash1 != hash2) return hash1 ^ hash2;             
+    return hash1;
+  }
+};
+
 void printArray(long arr[], int n) {
   for(int i=0; i<n; i++) {
     cout << arr[i] << " ";
+  } cout << endl;
+}
+
+void printVectorOfPairs(vector<pair<int,int>> vec) {
+  for(int i=0; i<vec.size(); i++) {
+    cout << vec[i].first << "," << vec[i].second << " ";
   } cout << endl;
 }
 
