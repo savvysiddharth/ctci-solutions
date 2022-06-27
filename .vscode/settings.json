@@ -49,7 +49,9 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "set": "cpp",
-    "bitset": "cpp"
+    "bitset": "cpp",
+    "regex": "cpp",
+    "valarray": "cpp"
   },
   "files.exclude": {
     "**/.vscode": true
