@@ -35,9 +35,12 @@ void print2DVector(vector<vector<int>> &matrix) {
   }
 }
 
-void printVector(vector<int> vec) {
-  for(int i=0; i<vec.size(); i++) cout << vec[i] << " ";
-  cout << endl;
+void printVector(vector<int> arr) {
+  cout << "Vec: [ ";
+  for(auto item : arr) {
+    cout << item << " ";
+  }
+  cout << "]" << endl;
 }
 
 void initSquareMatrix(vector<vector<int>> &matrix, int n) {
